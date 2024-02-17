@@ -1,0 +1,4 @@
+install-Package Microsoft.EntityFrameWorkCore -version 7.0.0
+install-Package Microsoft.EntityFrameWorkCore.design -version 7.0.0
+install-Package Microsoft.EntityFrameWorkCore.Tools -version 7.0.0
+install-Package Microsoft.EntityFrameWorkCore.Sqlserver -version 7.0.0
