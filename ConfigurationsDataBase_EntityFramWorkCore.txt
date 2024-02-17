@@ -1,0 +1,73 @@
+Scaffolding EntityFrameWorkCore V 7.0.0
+dotnet ef dbcontext scaffold "Server=localhost;Database=PostLandDb;Integrated Security=True;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true;" Microsoft.EntityFrameworkCore.SqlServer --output-dir Models
+
+
+
+Some Example with DbContext Configuration
+
+using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+
+namespace Mohasib.Persistence.Models;
+
+public partial class PostLandDbContext : DbContext
+{
+    public PostLandDbContext()
+    {
+    }
+
+    public PostLandDbContext(DbContextOptions<PostLandDbContext> options)
+        : base(options)
+    {
+    }
+
+    public virtual DbSet<Post> Posts { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=localhost;Database=PostLandDb;Integrated Security=True;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true;");
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Post>(entity =>
+        {
+            entity.ToTable("Post");
+
+            entity.Property(e => e.Name).HasMaxLength(50);
+        });
+
+        OnModelCreatingPartial(modelBuilder);
+    }
+
+    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+}
+
+
+
+
+
+Configure program.cs
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("PostConnectionString"));
+});
+
+
+
+Configure Appsettings.json
+
+{
+  "AllowedHosts": "*",
+  "ConnectionStrings": {
+    "PostConnectionString": "Server=localhost;Database=PostLandDb11;Integrated Security=True;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true"
+
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  }
+}
